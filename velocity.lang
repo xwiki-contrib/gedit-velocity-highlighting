@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ Author: Devon P. Hubner
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public
+ License along with this library; if not, write to the
+ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ Boston, MA 02111-1307, USA.
+
+-->
+<language id="velocity" _name="Velocity HTML Template (.vm)" version="2.0" _section="Markup">
+
+<metadata>
+  <property name="globs">*.vm</property>
+  <property name="line-comment-start">##</property>
+  <property name="block-comment-start">#*</property>
+  <property name="block-comment-end">*#</property>
+</metadata>
+
+<styles>
+  <style id="comment"    _name="comment"    map-to="def:comment"/>
+  <style id="error"      _name="error"      map-to="def:error"/>
+  <style id="string"     _name="string"     map-to="def:string" />
+  <style id="boolean"    _name="boolean"    map-to="def:boolean"/>
+  <style id="keyword"    _name="keyword"    map-to="def:keyword"/>
+  <style id="others"     _name="others"     map-to="def:keyword" />
+  <style id="type"       _name="type"       map-to="def:type" />
+  <style id="function"   _name="function"   map-to="def:function" />
+  <style id="statement"  _name="statement"  map-to="def:statement"/>
+  <style id="underlined" _name="underlined" map-to="def:underlined" />
+  <style id="null-value" _name="Null Value" map-to="def:special-constant"/>
+  <style id="operator"   _name="Operator"   map-to="def:operator" />
+  <style id="variable"   _name="Variable"   map-to="def:identifier"/>
+  <style id="special-constant" _name="special-constant" map-to="def:special-constant" />
+</styles>
+
+<definitions>
+
+
+<context id="velocity-html-markup-line-comment" style-ref="comment">
+  <start>##</start>
+  <end>$</end>
+  <include>
+    <context ref="def:line-continue"/>
+    <context ref="def:in-comment"/>
+  </include>
+</context>
+
+   <context id="velocity-html-markup-operators" style-ref="operator">
+      <keyword>=</keyword>
+      <keyword>==</keyword>
+      <keyword>=\\=</keyword>
+      <keyword>=:=</keyword>
+      <keyword>\|</keyword>
+      <keyword>&lt;</keyword>
+      <keyword>&gt;</keyword>
+      <keyword>=&lt;</keyword>
+      <keyword>&gt;=</keyword>
+      <keyword>\\=</keyword>
+      <keyword>\\==</keyword>
+      <keyword>\\\+</keyword>
+    </context>
+
+
+<context id="velocity-html-markup-array" style-ref="special-constant">
+  <start>\[</start>
+  <end>\]</end>
+</context>
+
+    <context id="velocity-html-markup-variable" style-ref="variable">
+      <match>[$]+[\!a-zA-Z_][a-zA-Z0-9_]*</match>
+    </context>
+
+
+<context id="velocity-html-markup-block-comment" style-ref="comment">
+  <start>#\*</start>
+  <end>\*#</end>
+  <include>
+    <context ref="def:in-comment"/>
+  </include>
+</context>
+
+<context id="velocity-html-markup-string-double" end-at-line-end="true" style-ref="string">
+  <start>"</start>
+  <end>"</end>
+  <include>
+    <context ref="def:line-continue"/>
+    <context ref="def:escape"/>
+  </include>
+</context>
+
+<context id="velocity-html-markup-string-single" end-at-line-end="true" style-ref="string">
+  <start>'</start>
+  <end>'</end>
+  <include>
+    <context ref="def:line-continue"/>
+    <context ref="def:escape"/>
+  </include>
+</context>
+
+<context id="velocity-html-markup-null-value" style-ref="null-value">
+  <keyword>nil</keyword>
+  <keyword>null</keyword>
+</context>
+
+<context id="velocity-html-markup-keywords" style-ref="keyword">
+  <keyword>#set</keyword>
+  <keyword>#if</keyword>
+  <keyword>in</keyword>
+  <keyword>#foreach</keyword>
+  <keyword>#end</keyword>
+</context>
+
+<context id="velocity-html-markup-syntax">
+  <include>
+    <context ref="velocity-html-markup-line-comment" />
+    <context ref="velocity-html-markup-block-comment" />
+    <context ref="velocity-html-markup-string-double" />
+    <context ref="velocity-html-markup-string-single" />
+    <context ref="velocity-html-markup-null-value" />
+    <context ref="velocity-html-markup-keywords" />
+    <context ref="velocity-html-markup-array" />
+    <context ref="velocity-html-markup-variable" />
+    <!-- context ref="velocity-html-markup-operators" -->
+  </include>
+</context>
+
+<context id="velocity">
+<include>
+<context ref="velocity-html-markup-syntax"/>
+<context ref="html:html"/>
+</include>
+</context>
+
+</definitions>
+
+</language>
+
